@@ -1,23 +1,24 @@
-# AREP Laboratory 4 - Concurrent server
 
-## Descripción
+# AREP Laboratory 4 - Concurrent Server & Docker Deployment
 
-Este proyecto implementa un servidor web HTTP en Java con un framework IoC (Inversión de Control) similar a Spring Boot. El servidor puede servir archivos estáticos (HTML, CSS, JS, imágenes) y manejar servicios web RESTful a través de anotaciones.
+## Resumen del Proyecto
 
-## Arquitectura del Sistema
+Este proyecto implementa un servidor web HTTP concurrente en Java, inspirado en el patrón IoC de Spring Boot. Permite servir archivos estáticos (HTML, CSS, JS, imágenes) y exponer servicios RESTful mediante anotaciones personalizadas. El despliegue se realiza usando Docker y Docker Compose, facilitando la ejecución y pruebas en cualquier entorno.
 
-### Componentes Principales:
+## Arquitectura y Diseño de Clases
 
-1. **HttpServer**: Servidor HTTP principal que maneja las conexiones
-2. **HttpRequest**: Maneja las solicitudes HTTP entrantes
-3. **HttpResponse**: Construye respuestas HTTP con headers dinámicos
-4. **WebApplication**: Clase principal para ejecutar el servidor
+### Componentes Principales
+
+1. **WebApplication**: Punto de entrada principal. Configura rutas de archivos estáticos y arranca el servidor.
+2. **HttpServer**: Encargado de aceptar conexiones, gestionar servicios REST y servir archivos estáticos. Ahora soporta apagado elegante vía shutdown hook.
+3. **HttpServerThread**: Atiende cada cliente en un hilo separado para concurrencia.
+4. **HttpRequest / HttpResponse**: Encapsulan la lógica de solicitudes y respuestas HTTP.
 5. **Framework de Anotaciones**:
-   - `@RestController`: Marca clases como controladores web
-   - `@GetMapping`: Define rutas HTTP GET
-   - `@RequestParam`: Extrae parámetros de consulta
+   - `@RestController`: Marca clases como controladores web.
+   - `@GetMapping`: Define rutas HTTP GET.
+   - `@RequestParam`: Extrae parámetros de consulta.
 
-### Flujo de Funcionamiento:
+### Diagrama de Flujo
 
 ```
 Cliente HTTP Request → HttpServer → 
@@ -75,42 +76,59 @@ public class HttpServerThread implements Runnable {
 
 }
 ```
-## Instalación y Uso
 
-### Prerrequisitos:
-- Java 8 o superior
+## Instalación y Despliegue
+
+### Prerrequisitos
+- Java 17 o superior
 - Maven 3.6 o superior
+- Docker y Docker Compose
 
-### Compilación:
+### Compilación local
 ```bash
-mvn clean compile
+mvn clean install
 ```
 
-### Ejecución:
+### Construcción de la imagen Docker
 ```bash
-java -cp target/classes edu.escuelaing.arep.app.WebApplication edu.escuelaing.arep.app.microspringboot.controllers.AppController
+docker build --tag arep-taller4 .
 ```
 
-### URLs Disponibles:
-- `http://localhost:35000/app/` - Página principal
-- `http://localhost:35000/app/greeting` - Saludo por defecto  
+### Despliegue con Docker Compose
+```bash
+docker-compose up --d
+```
+
+### URLs Disponibles
+- `http://localhost:35000/` - Página principal
+- `http://localhost:35000/app/greeting` - Saludo por defecto
 - `http://localhost:35000/app/greeting?name=Juan` - Saludo personalizado
 - `http://localhost:35000/index.html` - Archivo estático
 - `http://localhost:35000/app.js` - JavaScript
 - `http://localhost:35000/ballena.jpg` - Imagen
 
-## Evidencia de Pruebas
 
-![test](./resources/img/Test.png)
+## Evidencia de Despliegue y Pruebas
 
-### Ejecución pruebas:
+### Pruebas Unitarias
 ```bash
 mvn test
 ```
 
+### Imágenes del despliegue
+
+![test](./resources/img/Test.png)
+
+### Video demostrativo
+
+Adjunta aquí el enlace o archivo del video mostrando el despliegue y funcionamiento del servidor y los servicios REST. Ejemplo:
+
+[Ver video de despliegue](https://drive.google.com/your-demo-video)
+
+
 ## Extensibilidad
 
-Para agregar nuevos servicios, simplemente crear métodos en AppController:
+Para agregar nuevos servicios, simplemente crea métodos en `AppController`:
 
 ```java
 @GetMapping("/nuevo")
@@ -119,7 +137,8 @@ public static String nuevoServicio(@RequestParam(value = "param", defaultValue =
 }
 ```
 
+
 ## Autor
-Juan Andres Rodriguez Penuela 
+Juan Andres Rodriguez Penuela
 
 

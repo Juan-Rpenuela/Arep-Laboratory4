@@ -22,6 +22,8 @@ public class HttpServer {
     public static String WEB_ROOT;
     public static HashMap<String, Method> services = new HashMap<>();
     private static int clientNumber = 1;
+    private static volatile boolean running = true;
+    private static ServerSocket serverSocket = null;
 
     public static void loadServices(String[] args) {
  
@@ -47,15 +49,13 @@ public class HttpServer {
 
     public static void startServer(String[] args) throws IOException, URISyntaxException {
         loadServices(args);
-        staticfiles("C:\\Escuela Colombiana de ingenieria\\Semestre 9\\AREP\\Arep-Laboratory3\\resources"); // Configurar el directorio de archivos estáticos
-        ServerSocket serverSocket = null;
+        staticfiles("resources/");
         try {
             serverSocket = new ServerSocket(35000);
         } catch (IOException e) {
             System.err.println("Could not listen on port: 35000.");
             System.exit(1);
         }
-        boolean running = true;
         while (running) {
             try {
                 System.out.println("Listo para recibir ...");
@@ -63,11 +63,26 @@ public class HttpServer {
                 Thread thread = new Thread(serverThread);
                 thread.start();
             } catch (IOException e) {
-                System.err.println("Accept failed.");
-                System.exit(1);
+                if (running) {
+                    System.err.println("Accept failed.");
+                    System.exit(1);
+                }
             }
         }
-        serverSocket.close();
+        if (serverSocket != null && !serverSocket.isClosed()) {
+            serverSocket.close();
+        }
+    }
+
+    public static void stopServer() {
+        running = false;
+        if (serverSocket != null && !serverSocket.isClosed()) {
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                System.err.println("Error closing server socket: " + e.getMessage());
+            }
+        }
     }
 
     public static int getClientNumber() {

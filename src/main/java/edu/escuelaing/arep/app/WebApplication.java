@@ -8,9 +8,12 @@ import edu.escuelaing.arep.app.httpserver.HttpServer;
 public class WebApplication {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
-            HttpServer.staticfiles("./resources");
-            HttpServer.startServer(args);
-
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Shutdown signal received. Stopping server...");
+            HttpServer.stopServer();
+        }));
+        HttpServer.staticfiles("./resources");
+        HttpServer.startServer(args);
     }
 
 }
