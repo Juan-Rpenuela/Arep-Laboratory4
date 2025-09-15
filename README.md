@@ -96,7 +96,7 @@ docker build --tag arep-taller4 .
 
 ### Despliegue con Docker Compose
 ```bash
-docker-compose up --d
+docker-compose up -d
 ```
 
 ### URLs Disponibles
@@ -123,19 +123,9 @@ mvn test
 
 Adjunta aquí el enlace o archivo del video mostrando el despliegue y funcionamiento del servidor y los servicios REST. Ejemplo:
 
-[Ver video de despliegue](https://drive.google.com/your-demo-video)
+[Ver video de despliegue](https://pruebacorreoescuelaingeduco-my.sharepoint.com/:v:/g/personal/juan_rpenuela_mail_escuelaing_edu_co/EXLc9YEIEcNMq5Unk1X2Z9UBCDfu7DTmsc-WZWnEMaBllQ?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=fcxFPQ)
 
 
-## Extensibilidad
-
-Para agregar nuevos servicios, simplemente crea métodos en `AppController`:
-
-```java
-@GetMapping("/nuevo")
-public static String nuevoServicio(@RequestParam(value = "param", defaultValue = "default") String param) {
-    return "Nuevo servicio: " + param;
-}
-```
 
 
 ## Autor
